@@ -10,7 +10,7 @@ const {storage} = require("../cloudinary_config.js");
 const upload = multer({storage})
 
 router.get("/", wrapAsync(listingController.index));
-router.get("/add", isloggedin, wrapAsync(listingController.add));
+router.get("/add", isloggedin, listingController.add);
 // router.post("/", validateListing, wrapAsync(listingController.newListing));
 router.post("/",upload.single('listing[image]'),wrapAsync(listingController.newListing))
 

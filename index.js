@@ -102,8 +102,14 @@ app.all("*", (req, res, next) => {
 // General Error Handler
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong" } = err;
-  res.status(statusCode).send(message);
+
+  if (!res.headersSent) {
+    res.status(statusCode).send(message); // or res.render('error.ejs', { err });
+  } else {
+    next(err); // if headers are already sent, pass the error
+  }
 });
+
 
 // Start the Server
 app.listen(port, () => {
