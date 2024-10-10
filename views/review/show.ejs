@@ -1,0 +1,119 @@
+<%layout("/layout/boilerplate")-%>
+<style>
+  #map{
+    height: 400px;
+    width: 60vw;
+    border: 1px solid black;
+  }
+  .showbtn{
+    margin: 0px 10px;
+    padding: 0px 10px;
+    border-radius: .5rem;
+    
+  }
+</style>
+<body>
+  <div class="d-flex justify-content-center align-items-center">
+<div class="card listing-card" style="width: 30rem;">
+            <img src="<%=showlisting.image.url%>" class="card-img-top" alt="..."   style="height: 20rem;">
+            <div class="card-body">
+              <h5 class="card-title mt-3"><%=showlisting.title%></h5>
+              <p class="card-text"> Owned by <%= showlisting.owner.username %> </p>
+              <p class="card-text"><%=showlisting.description%></p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">&#8377 <%=showlisting.price%> / Night </li>
+              <li class="list-group-item"><%=showlisting.location%></li>
+              <li class="list-group-item"><%=showlisting.country%></li>
+            </ul>
+            <div class="card-body d-flex mt-3">
+ 
+                <form action="/listings/<%=showlisting._id%>/edit" method="get">
+                    <button type="submit" class="btn btn-outline-primary showbtn">Edit</button>
+                </form>
+                <form action="/listings/<%=showlisting._id%>?_method=delete "method="post" class="card-link">
+                    <button type="submit" class="btn btn-outline-danger showbtn">Delete</button>
+                  </form>
+                 
+                
+            </div>
+          </div>
+        </div>
+<hr>
+        <div class="col-8 offset-3 mb-3 mt-3" >
+          <h4>leave a review</h4>
+          <form  action="/listings/<%=showlisting._id%>/reviews" method="post" novalidate class="needs-validation">
+
+            <div class=" mb-3 mt-3">
+              <label for="rating" class="form-label">Rating</label>
+              <fieldset class="starability-slot">
+                
+                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                <label for="first-rate1" title="Terrible">1 star</label>
+                <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                <label for="first-rate2" title="Not good">2 stars</label>
+                <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                <label for="first-rate3" title="Average">3 stars</label>
+                <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                <label for="first-rate4" title="Very good">4 stars</label>
+                <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                <label for="first-rate5" title="Amazing">5 stars</label>
+              </fieldset>
+            </div>
+           
+            <div class=" mb-3 mt-3">
+              <label for="comment" class="form-label">Comments</label>
+              <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
+            </div>
+            <button class="btn btn-outline-secondary">submit</button>
+          </form>
+        </div>
+        
+        <hr>
+        <div class="col-8 offset-3 mb-3 mt-3">
+       
+      
+       <div class="row">
+        <h4>All review</h4>
+       <%for(review of showlisting.reviews){%>
+        <div class="card col-6">
+          <div class="card-body ">
+            <h5 class="card-title"><%=review.author.username%></h5>
+            <p class="starability-result" data-rating="<%=review.rating%>"></p>
+            <p class="card-text">Comment: <%=review.comment%></p>
+          
+           
+            
+            <form action="/listings/<%=showlisting._id%>/reviews/<%=review._id%>?_method=DELETE" method="post">
+              <button class="btn-outline-secondary">Delete</button>
+            </form>
+           
+          
+           
+           
+
+          </div>
+        </div>
+
+       <%}%>
+      </div>
+      
+
+      </div>
+      </div>
+      <div class="col-8 offset-3 mb-3 mt-3" id="map"></div>
+      <script>
+        // TO MAKE THE MAP APPEAR YOU MUST
+        // ADD YOUR ACCESS TOKEN FROM
+        // https://account.mapbox.com
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYXJ0aHVyYW1hbiIsImEiOiJja3R1Z3Z2Z3YwMzJvMnZwZ3Z2Z3Z2Z3YwIno.1Z6';
+          const map = new mapboxgl.Map({
+              container: 'map', // container ID
+              style: 'mapbox://styles/mapbox/streets-v11', // style URL
+              center: [-74.5, 40], // starting position [lng, lat]. Note that lat must be set between -90 and 90
+              zoom: 9 // starting zoom
+          });
+      </script>
+
+</body>
